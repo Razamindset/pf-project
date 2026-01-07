@@ -1,0 +1,9 @@
+let age = 0
+input age
+
+if age >= 18 {
+    print "adult"
+}
+else {
+    print "minor"
+}

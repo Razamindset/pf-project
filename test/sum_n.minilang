@@ -1,0 +1,11 @@
+let n = 0
+let sum = 0
+
+input n
+
+repeat n > 0 {
+    sum = sum + n
+    n = n - 1
+}
+
+print sum

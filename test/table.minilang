@@ -1,0 +1,7 @@
+let i = 1
+let n = 5
+
+repeat i <= 10 {
+    print n * i
+    i = i + 1
+}
