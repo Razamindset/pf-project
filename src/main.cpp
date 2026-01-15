@@ -3,17 +3,13 @@
 #include<regex>
 #include<string>
 
-int main(int argc, char* argv[]){
-    if (argc < 2) {
-        std::cerr << "Usage: minilang.exe filename.minilang" << std::endl;
-    }
-
-    std::ifstream in(argv[1]);
+void transpile(std::string filename){
+    std::ifstream in(filename);
     std::ofstream out("output.cpp");
 
     if(!in.is_open()){
-        std::cerr << "Could not open " << argv[1] << std::endl;
-        return 1;
+        std::cerr << "Could not open: " << filename << std::endl;
+        exit(1);
     }
 
     out << "#include<iostream>\n";
@@ -33,19 +29,41 @@ int main(int argc, char* argv[]){
         // trim spaces
         line = std::regex_replace(line, std::regex("^ +| +$"), "");
 
+        // If there is nothingon the line we can just skip it 
         if(line.empty()) continue;
 
         // Comments in our language start with #
-        if(line.rfind("#", 0) == 0) continue;
+        if(line.rfind("#", 0) == 0){
+            std::string comment = line.substr(1);
+            writeIndent(indent);
+            out<<"// "<< comment << std::endl; 
+            continue;
+        };
 
-        // variable decleration
-        if(line.rfind("let ", 0) == 0){
+        // number var decleration
+        if(line.rfind("num ", 0) == 0){
             line = line.substr(4);
             writeIndent(indent);
-            out << "auto " << line << ";" << std::endl;  
+            out << "int " << line << ";" << std::endl;  
             continue;
         }
-
+     
+        // decimal var decleration
+        if(line.rfind("decimal ", 0) == 0){
+            line = line.substr(8);
+            writeIndent(indent);
+            out << "double " << line << ";" << std::endl;  
+            continue;
+        }
+     
+        // character var decleration
+        if(line.rfind("letter ", 0) == 0){
+            line = line.substr(7);
+            writeIndent(indent);
+            out << "char " << line << ";" << std::endl;  
+            continue;
+        }
+     
         // Print statement 
         if(line.rfind("print ", 0) == 0){
             // 5 for print and sixth for the (
@@ -84,7 +102,7 @@ int main(int argc, char* argv[]){
             continue;
         }
 
-        // Closing brackets for loop and if else statements 
+        // Closing brackets for loop and if else conditional and while loops 
         if(line == "}"){
             indent--;
             writeIndent(indent);
@@ -124,15 +142,29 @@ int main(int argc, char* argv[]){
     out.close();
     out.flush();
 
+    // Succesfull transpiling...
     std::cout << "[Success] Transpiling complete. See output.cpp\n";
+}
 
+void compile_n_run(){
     int compileResult = std::system("g++ output.cpp -o app.exe");
+
     if(compileResult == 0){
         std::cout << "[Success] Compilation complete. Running now\n";
         std::system(".\\app.exe");
     } else {
         std::cerr << "[Error] Compilation failed!" << std::endl;
     }
+}
+
+// argc is the arguments count while argv[] is the argument values...
+int main(int argc, char* argv[]){
+    if (argc < 2) {
+        std::cerr << "Usage: minilang.exe filename.minilang" << std::endl;
+    }
+
+    transpile(argv[1]);
+    compile_n_run();
 
     return 0;
 }

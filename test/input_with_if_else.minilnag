@@ -1,4 +1,4 @@
-let age = 0
+num age = 0
 input age
 
 if age >= 18 {

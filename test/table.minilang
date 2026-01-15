@@ -1,5 +1,5 @@
-let i = 1
-let n = 5
+num i = 1
+num n = 5
 
 repeat i <= 10 {
     print n * i

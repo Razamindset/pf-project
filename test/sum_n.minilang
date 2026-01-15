@@ -1,5 +1,5 @@
-let n = 0
-let sum = 0
+num n = 0
+num sum = 0
 
 input n
 

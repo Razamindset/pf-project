@@ -1,11 +1,8 @@
 #include<iostream>
 using namespace std;
 int main(){
-    auto i = 1;
-    auto n = 5;
-    while( i <= 10 ) {
-        cout<<n * i << endl;
-        i = i + 1;
-    }
+    int a = 10;
+    double b = 25.5;
+    char ch = 'A';
     return 0;
 }
